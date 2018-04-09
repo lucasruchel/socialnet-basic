@@ -32,13 +32,13 @@ class UserPosts(generic.ListView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['post_user'] = self.post_user
+        context['post_user'] = self.post.user
 
         return context
 
 class PostDetail(generic.DetailView):
     model = models.Post
-    select_related = ('user',group)
+    select_related = ('user','group')
 
     def get_queryset(self):
         queryset = super().get_queryset()
