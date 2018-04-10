@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -22,9 +23,9 @@ class UserPosts(generic.ListView):
     model = models.Post
     template_name = 'posts/user_post_list.html'
 
-    def get_query_set(self):
+    def get_queryset(self):
         try:
-            self.post.user = User.objects.prefetch_related('posts').get(username__iexact=self.kwargs.get('username'))
+            self.post_user = User.objects.prefetch_related('posts').get(username__iexact=self.kwargs.get('username'))
         except User.DoesNotExist:
             raise Http404
         else:
@@ -32,7 +33,7 @@ class UserPosts(generic.ListView):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['post_user'] = self.post.user
+        context['posts'] = self.post_user
 
         return context
 
@@ -66,5 +67,5 @@ class DeletePost(LoginRequiredMixin, SelectRelatedMixin, generic.DeleteView):
         return queryset.filter(user_id = self.request.user.id)
 
     def delete(self,*args,**kwargs):
-        messages.sucess(self.request, 'Post Deleted')
+        messages.success(self.request, 'Post Deleted')
         return super().delete(*args,**kwargs)

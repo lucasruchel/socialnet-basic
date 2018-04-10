@@ -1,21 +1,20 @@
 <div class="post media">
-  <h3>{{post.message_html|safe}}</h3>
+  <h4>{{post.message_html|safe}}</h4>
 
-  <div class="media-body">
-    <strong>{{post.user.username}}</strong>
-    <h5 class="media-heading">
+  <div class="media">
+    <h5 class="media-body">
     <span class="username">
-      <a href="{% url 'posts:for_user' username=post.user.username %}"></a>
+      <a href="{% url 'posts:for_user' username=post.user.username %}">@{{post.user.username}}</a>
     </span>
     <time class="time">
-      <a href="{% url 'posts:single' username=post.user.username pk=post.pk %}"></a>
+      <a href="{% url 'posts:single' username=post.user.username pk=post.pk %}">{{post.create_at}}</a>
     </time>
     </h5>
 
-    <div class="media-footer">
+    <div class="media-body">
       {% if user.is_authenticated and post.user == user %}
         <a href="{% url 'posts:delete' pk=post.pk %}" title="delete" class="btn btn-danger">
-          <span class="text-danger">Delete</span>
+          <span >Delete</span>
         </a>
 
       {% endif %}
